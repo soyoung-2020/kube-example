@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:  
+  name: liveness-pod
+spec:  
+  containers:  
+  - name: liveness    
+    image: gcr.io/terrycho-sandbox/liveness:v1    
+    imagePullPolicy: Always    
+    ports:    
+    - containerPort: 8080    
+    livenessProbe:      
+      exec:         # Command probe는 컨테이너의 상태 체크를 쉘 명령을 수행하고 나서, 그 결과를 가지고 컨테이너의 정상여부를 체크
+        command:    # 쉘 명령어를 수행한 후, 결과값이 0 이면 성공, 0이 아니면 실패   
+        - cat        
+        - /tmp/healthy
