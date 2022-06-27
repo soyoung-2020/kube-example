@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:  
+  name: liveness-pod-tcp
+spec:  
+  containers:           
+  - name: liveness    
+    image: gcr.io/terrycho-sandbox/liveness:v1
+    imagePullPolicy: Always
+    ports:
+    - containerPort: 8080
+    livenessProbe:		# 지정된 포트에 TCP 연결을 시도하여, 연결이 성공하면, 컨테이너가 정상
+      tcpSocket:      # Tcp probe는 간단하게, livenessProbe나 readinessProbe 아래 tcpSocket이라는 항목으로 정의,
+        port: 8080    # 그 아래 port 항목에 tcp port를 지정
+      initialDelaySeconds: 5
+      periodSeconds: 5
+                      # 이 포트로 TCP 연결을 시도하고, 이 연결이 성공하면 컨테이너가 정상인것으로 실패하면 비정상으로 판단      
