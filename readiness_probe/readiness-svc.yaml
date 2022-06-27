@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: readiness-svc
+spec:
+  selector:
+    app: readiness
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 8080
+  type: LoadBalancer
+  # 서비스가 기동되고 Pod들이 정상적으로 기동된 상태에서 kubectl get pod 명령을 이용해서 현재 Pod 리스트를 출력
+#서비스가 기동중인 상태에서 인위적으로 하나의 컨테이너를 서비스 불가 상태로 만들어보자.앞에서만든 server.js가, 컨테이너 내의 /tmp/healthy 파일의 존재 여부를 체크하기 때문에,  /tmp/healthy 파일을 삭제하면 된다.
+# kubectl exec  -it readiness-rc-5v64f -- rm /tmp/healthy
+# 다음 kubectl describe pod readiness-rc-5v64f 명령을 이용해서 해당 Pod의 상태를 확인할 수 있는데, 아래 그림과 같이 HTTP probe가 500 상태 코드를 리턴받고 Readniess probe가 실패한것을 확인할 수 있다.
+# kubectl exec -it readliness-rc-5v64f -- rm /tmp/healthy
+# 다음 kubectl describe pod readiness-rc-5v64f 명령을 이용해서 해당 Pod의 상태를 확인할 수 있는데, 아래 그림과 같이 HTTP probe가 500 상태 코드를 리턴받고 Readniess probe가 실패한것을 확인할 수 있다
+# kubectl get pod
+# Readiness probe가 실패한 readiness-rc-5v64f 의 상태가 Running이기는 하지만 Ready 상태가 0/1인것으로 해당 컨테이너가 준비 상태가 아님을 확인할 수 있다.이 Pod들에 연결된 서비스를 여러번 호출해보면 다음과 같은 결과를 얻을 수 있다.
+# curl 35.194.118.29  반복
+# 든 호출이 readiness-rc-5v64f 로 가지않고, 하나 남은 정상적인 Pod인 readiness-rc-89d89 로만 가는 것을 확인할 수 있다.
