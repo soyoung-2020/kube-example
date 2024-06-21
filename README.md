@@ -1,4 +1,5 @@
 
 
 reference
-- https://upcloud.com/resources/tutorials/deploy-managed-kubernetes-cluster-terraform
+- https://github.com/UpCloudLtd/uks-instructions/tree/main
+
